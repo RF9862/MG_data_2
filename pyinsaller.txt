@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --onedir --console --icon "E:/working/jaisan/causeListProject/causeList.ico"  "E:/working/jaisan/causeListProject/CauseListData.py"

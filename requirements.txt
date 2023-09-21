@@ -1,0 +1,12 @@
+numpy
+easyocr
+pytesseract
+mmdet
+mmcv-full
+mmcv
+opencv-contrib-python==4.6.0.66
+PyMuPDF
+pdfrw
+pikepdf
+openpyxl
+beautifulsoup4
