@@ -126,12 +126,6 @@ def mainMG(main_self, data_dir, output_dir, err_dir):
 #     # Initialize logger
 #     if os.path.exists('parse_table.log'):
 #         os.remove('parse_table.log')
-#     logger = logging.getLogger('parse_table')
-#     logger.setLevel(logging.INFO)
-#     ch = logging.StreamHandler()
-#     fh = logging.FileHandler('parse_table.log')
-#     logger.addHandler(ch)
-#     logger.addHandler(fh)
 
 #     # Run main control flow    
 #     mainMG(DATA_DIR, OUTPUT_DIR)

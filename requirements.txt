@@ -1,12 +1,15 @@
 numpy
 easyocr
 pytesseract
-mmdet
-mmcv-full
-mmcv
 opencv-contrib-python==4.6.0.66
 PyMuPDF
 pdfrw
 pikepdf
 openpyxl
 beautifulsoup4
+
+
+
+
+mim install "mmcv<=1.8.0"
+mim install mmdet==2.28.0

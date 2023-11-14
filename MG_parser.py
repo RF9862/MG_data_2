@@ -13,6 +13,7 @@ from PIL import Image
 from bs4 import BeautifulSoup
 import pikepdf
 from xfaTools import XfaObj
+import datetime
 from cascade_detection_mmdet import cascade_mmdet
 import easyocr
 reader = easyocr.Reader(['en'], detector=True, recognizer=True, model_storage_directory="model/") # this needs to run only once to load the model into memory Using CPU. Note: This module is much faster with a GPU.
@@ -837,7 +838,29 @@ class Document:
                         attatch_info[i] = list(text[:,ind])
                     
         return attatch_info        
-
+    def getVal(self, val):
+        name = val.name
+        val = val.string
+        
+        try:
+            tempVal = str(float(val)).strip('0')
+            tempVal = tempVal.strip('.')
+            if tempVal == "": output = 0
+            else:
+                try: output = str(int(tempVal))
+                except: output = str(float(tempVal))
+            
+        except: 
+            if 'date' in name:
+                try:
+                    date_obj = datetime.datetime.strptime(val, "%Y-%m-%d")
+                    output = date_obj.strftime("%d/%m/%Y")  
+                except: 
+                    output = "" 
+            else:             
+                output = val  
+        
+        return output 
     def mainProp(self):
         '''
         https://github.com/AF-VCD/pdf-xfa-tools
@@ -848,29 +871,125 @@ class Document:
             xfaDict = XfaObj(pdfData)   
             data = xfaDict['datasets'] 
         soup = BeautifulSoup(data)
-        CIN_nos = soup.find_all('cin')
-        for cin in CIN_nos: 
+        output = {}
+        output["Cin"] = soup.find_all('cin')
+        output["Email"] = soup.find_all('email_id_company')
+        output["Phone_Number"] = soup.find_all('phone_number')
+        output["PAN"] = soup.find_all('it_pan_of_compny')
+        output["Turnover"] = soup.find_all('tot_turnover')
+        output["Website"] = soup.find_all('website')
+        output["NetWorth"] = soup.find_all('net_worth_comp')
+        output["Agm_Date"] = soup.find_all('date_agm')
+        output["Financial_From_Date"] = soup.find_all('fy_from_date')
+        output["Financial_End_Date"] = soup.find_all('fy_end_date')
+        output["Main_Act_Grp_Code"] = soup.find_all('main_act_grp_cod')#11
+        output["Des_Business_Act"] = soup.find_all('des_business_act')#12
+        output["Business_Act_Code"] = soup.find_all('business_act_cod')#13
+        output["Percent_Turn_Ovr"] = soup.find_all('percent_turn_ovr')#14
+        
+        output["Holding_Company_Name"] = soup.find_all('name_company')#15
+        output["Hold_Sub_Asso_Cin"] = soup.find_all('cin_fcrn')# 16
+        output["HOLDING_SUBSIDIARY_ASSOCIATE"] = soup.find_all('hold_sub_assoc') #17
+        output["PERCENT_SHARE"] = soup.find_all('percent_share') #18
+        
+        output["Total_Numer_equity_Authorized_Capital"] = soup.find_all('tot_no_es_a_cap') #19- Total_number_equity_Authorized_Capital
+        output["Authorized_Capital_Nominal_Value"] = soup.find_all('no_es_a_cap') #20- e_Authorized_Capital_Nominal_Value
+        output["Total_Amount_equity_Authorized_Capital"] = soup.find_all('tot_amt_es_a_cap') #21- Total_amount_equity_Authorized_Capital-
+        
+        output["Total_number_preference_Authorized_Capital"] = soup.find_all('tot_no_ps_a_cap') #22- Total_number_preference_Authorized_Capital
+        output["preference_Authorized_Capital_Nominal_Value"] = soup.find_all('nom_val_ps_a_cap') #23- preference_Authorized_Capital_Nominal_Value
+        output["Total_amount_preference_Authorized_Capital"] = soup.find_all('tot_amt_ps_a_cap') #24- Total_amount_preference_Authorized_Capital
+        
+        output["Total_number_equity_Issued_Capital"] = soup.find_all('tot_no_es_i_cap') #25- Total_number_equity_Issued_Capital
+        output["Issued_Capital_Nominal_Value"] = soup.find_all('no_es_i_cap') #26- Issued_Capital_Nominal_Value
+        output["Total_amount_equity_Issued_Capital"] = soup.find_all('tot_amt_es_i_cap') #27- Total_amount_equity_Issued_Capital
+        output["Total_number_preference_Issued_Capital"] = soup.find_all('tot_no_ps_i_cap') #28- Total_number_preference_Issued_Capital
+        output["preference_Issued_Capital_Nominal_Value"] = soup.find_all('nom_val_ps_i_cap') #29- preference_Issued_Capital_Nominal_Value
+        
+        output["Total_amount_preference_Issued_Capital"] = soup.find_all('tot_amt_ps_i_cap') #30- Total_amount_preference_Issued_Capital
+        output["Total_number_equity_Subscribed_Capital"] = soup.find_all('tot_no_es_s_cap') #31- Total_number_equity_Subscribed_Capital
+        output["Subscribed_Capital_Nominal_Value"] = soup.find_all('no_es_s_cap') #32- Subscribed_Capital_Nominal_Value
+        output["Total_amount_equity_Subscribed_Capital"] = soup.find_all('tot_amt_es_s_cap') #33.Total_amount_equity_Subscribed_Capital
+        output["Total_number_preference_Subscribed_Capital"] = soup.find_all('tot_no_ps_s_cap') #34- Total_number_preference_Subscribed_Capital
+        output["preference_Subscribed_Capital_Nominal_Value"] = soup.find_all('nom_val_ps_s_cap') #35- preference_Subscribed_Capital_Nominal_Value
+        output["Total_amount_preference_Subscribed_Capital"] = soup.find_all('tot_amt_ps_s_cap') #36- Total_amount_preference_Subscribed_Capital-
+        
+        output["Total_number_equity_Paid_Up_Capital"] = soup.find_all('tot_no_es_p_cap') #37- Total_number_equity_Paid_Up_Capital
+        output["Paid_Up_Capital_Nominal_Value"] = soup.find_all('nom_val_es_p_cap') #38- Paid_Up_Capital_Nominal_Value
+        output["Total_amount_equity_Paid_Up_Capital"] = soup.find_all('tot_amt_es_p_cap') #39- Total_amount_equity_Paid_Up_Capital
+        output["Total_number_preference_Paid_Up_Capital"] = soup.find_all('tot_no_ps_p_cap') #40- Total_number_preference_Paid_Up_Capital
+        output["preference_Paid_Up_Capital_Nominal_Value"] = soup.find_all('nom_val_ps_p_cap') #41- preference_Paid_Up_Capital_Nominal_Value
+        output["Total_amount_preference_Paid_Up_Capital"] = soup.find_all('tot_amt_ps_p_cap') #42- Total_amount_preference_Paid_Up_Capital
+        output["NO_COMPANIES"] = soup.find_all('no_companies') #43- NO_COMPANIES
+        output["NO_BUSINESS_ACTIVITY"] = soup.find_all('no_business_act') # 44- NO_BUSINESS_ACTIVITY
+        output["File_Name"] = self.img_name
+        
+        # direction check
+        for cin in output["Cin"]: 
             try:
                 if len(cin.string) > 10: # CIN length is 21
-                    CIN_no = cin.string
+                    output["Cin"] = cin.string
                     break
             except: pass
-        share_his_pcs = soup.find_all('date_agm')
-        for agm in share_his_pcs: 
-            try:
-                if len(agm.string)  > 5: # agm length is greater than 10
-                    share_his_pc = agm.string
-                    break
-            except: pass
-        total_shares = soup.find_all('tot_no_es_s_cap')
-        for sub in total_shares: 
-            try:
-                if len(sub.string)  > 5: # subscribed number length is greater than 10
-                    total_share = sub.string.split('.')[0]
-                    break             
-            except: pass
+        newOutput = {}
+        direction = False
+        for key, val in output.items():
+            if key == 'Cin' or key == "File_Name": continue
+            if len(val)>1 and val[0].string != None: 
+                direction = True
+                break
+        for key, val in output.items():
+            if key == 'Cin' or key == "File_Name": 
+                newOutput[key] = val
+                continue
+            if direction: newOutput[key] = self.getVal(val[0])
+            else: newOutput[key] = self.getVal(val[-1])
+        
+        result = []
+        businessTwoCheck, companyTwoCheck = False, False
+        if len(output["Business_Act_Code"]) > 2: businessTwoCheck = True                
+        if len(output["Holding_Company_Name"]) > 2: companyTwoCheck = True   
+        
 
-        return [CIN_no, share_his_pc, total_share]
+        if companyTwoCheck:
+            companyTwoCheck = True
+            newOutputCpy = newOutput.copy()
+            if direction: S, k = 0, -1
+            else: S, k = len(output["Holding_Company_Name"])-1, 1        
+            for i in range(0, len(output["Holding_Company_Name"])-1):
+                newOutputCpy["Holding_Company_Name"] = self.getVal(output["Holding_Company_Name"][S-k*i])
+                newOutputCpy["Hold_Sub_Asso_Cin"] = self.getVal(output["Hold_Sub_Asso_Cin"][S-k*i])
+                newOutputCpy["HOLDING_SUBSIDIARY_ASSOCIATE"] = self.getVal(output["HOLDING_SUBSIDIARY_ASSOCIATE"][S-k*i])
+                newOutputCpy["PERCENT_SHARE"] = self.getVal(output["PERCENT_SHARE"][S-k*i])
+                if businessTwoCheck:
+                    newOutputCpy["Main_Act_Grp_Code"] = ''
+                    newOutputCpy["Des_Business_Act"] = ''
+                    newOutputCpy["Business_Act_Code"] = ''
+                    newOutputCpy["Percent_Turn_Ovr"] = ''
+                
+                result.append(newOutputCpy) 
+        if businessTwoCheck:
+            newOutputCpy = newOutput.copy()
+            if direction: S, k = 0, -1
+            else: S, k = len(output["Business_Act_Code"])-1, 1                
+            for i in range(0, len(output["Business_Act_Code"])-1):
+                newOutputCpy["Main_Act_Grp_Code"] = self.getVal(output["Main_Act_Grp_Code"][S-k*i])
+                newOutputCpy["Des_Business_Act"] = self.getVal(output["Des_Business_Act"][S-k*i])
+                newOutputCpy["Business_Act_Code"] = self.getVal(output["Business_Act_Code"][S-k*i])
+                newOutputCpy["Percent_Turn_Ovr"] = self.getVal(output["Percent_Turn_Ovr"][S-k*i])
+                newOutputCpy
+                if companyTwoCheck:
+                    newOutputCpy["Holding_Company_Name"] = ''
+                    newOutputCpy["Hold_Sub_Asso_Cin"] = ''
+                    newOutputCpy["HOLDING_SUBSIDIARY_ASSOCIATE"] = ''
+                    newOutputCpy["PERCENT_SHARE"] = ''
+                result.append(newOutputCpy)  
+        if not (companyTwoCheck or  businessTwoCheck):
+            result.append(newOutput)
+                
+        return result
+
+        # return [CIN_no, share_his_pc, total_share]
 
     def attachProcessing(self):
         pdf_full_name = os.path.join(self.doc_dir, self.doc_name + ".pdf")
