@@ -1,0 +1,31 @@
+
+-- value from column T is copied in Column U)
+
+-- value from column Z is copied in Column AA)
+
+-- value from column AF is copied in Column AG)
+
+--- Attachment file ( shareholders data) - sometimes only 2 or 3 pages extracted 
+
+-- pdf  face sheet   -- II. PRINCIPAL BUSINESS ACTIVITIES OF THE COMPANY
+
+Column "Description of Main Activity group" is missing (  Add this column at "Col L" location in output excel sheet)
+
+-------------------------
+
+pdf face sheet
+
+III. PARTICULARS OF HOLDING, SUBSIDIARY AND ASSOCIATE COMPANIES
+(INCLUDING JOINT VENTURES)
+
+
+Name of company - column is repeating last row data
+
+-----------------------------
+
+--- Attachment file ( shareholders data) - 
+
+address column is exchange with share held history column ( C col with D col )
+
+---------------
+
