@@ -1,1 +1,3 @@
 https://github.com/iiLaurens/CascadeTabNet
+
+miniconda: https://docs.conda.io/projects/miniconda/en/latest/miniconda-other-installer-links.html
